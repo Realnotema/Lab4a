@@ -17,10 +17,19 @@ int addElement (Tree *tree, int key, int info) {
                 else
                         ptr = ptr->right;
         }
-        if (temp->key < par->key)
+        if (temp->key < par->key) {
                 par->left = temp;
-        else
+                if (temp->next != tree->root)
+                        temp->next = par;
+        } else {
                 par->right = temp;
+                if (par != tree->root) {
+                        temp->next = par->par;
+                        par->next = temp;
+                }
+        }
+        if (par->par != NULL && par->par == tree->root)
+                tree->root->next = temp;
         temp->par = par;
         return 0;
 }
