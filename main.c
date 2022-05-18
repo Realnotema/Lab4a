@@ -65,7 +65,7 @@ int Menu (int choose, Tree *tree) {
         case 7:
             break;
         case 8:
-            fo = (GetStr(), "r+b");
+            fo = fopen(GetStr(), "r+b");
             readTree(fo, tree);
             fclose(fo);
             break;
