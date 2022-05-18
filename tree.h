@@ -2,16 +2,18 @@
 #define THEE_H
 
 typedef struct Node {
-        int key;
-        int info;
-        struct Node *left;
-        struct Node *right;
-        struct Node *parent;
-        struct Node *next;
+    int key;
+    int info;
+    struct Node *node;
+    struct Node *left;
+    struct Node *right;
+    struct Node *par;
+    struct Node *next;
 } Node;
 
 typedef struct Tree {
-        Node *root;
+    Node *root;
+    int tsize;
 } Tree;
 
 #endif
