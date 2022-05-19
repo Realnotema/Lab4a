@@ -116,6 +116,12 @@ int findByKey (Tree *tree, int key) {
     return 0;
 }
 
+Node *findMax (Node *ptr) {
+    while (ptr->right != NULL)
+        ptr = ptr->right;
+    return ptr;
+}
+
 int delElement (Tree *tree, int key) {
     Node *pos = NULL;
     for (int i = 0; i <= tree->tsize; i++) {
