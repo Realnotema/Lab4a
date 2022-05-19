@@ -63,8 +63,11 @@ int Menu (int choose, Tree *tree) {
             printTree (tree->root, 0);
             break;
         case 7:
+            puts("1. Add Element\n2. Find by key\n3. Delete element");
+            timing(tree, GetInt());
             break;
         case 8:
+            puts("Enter name of file:");
             fo = fopen(GetStr(), "r+b");
             readTree(fo, tree);
             fclose(fo);
