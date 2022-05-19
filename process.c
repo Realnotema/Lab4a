@@ -130,37 +130,31 @@ int delElement (Tree *tree, int key) {
         tree->tsize--;
         return 0;
     }
-    if (pos->left == NULL && pos->right == NULL) {
-        free(pos);
-        tree->tsize--;
+    if (pos->left && pos->right) {
+        Node *max = findMax(pos->left);
+        pos->info = max->info;
+        delElement(max, key);
         return 0;
-    }
-    if (pos->left != NULL) {
-        if (pos->par->key > pos->key) {
+    } else if (pos->left) {
+        if (pos == pos->par->left) {
             pos->par->left = pos->left;
-            free(pos);
-            tree->tsize--;
-            return 0;
         } else {
-            pos->par->left = pos->left;
-            free(pos);
-            tree->tsize--;
-            return 0;
+            pos->par->right = pos->left;
+        }
+    } else if (pos->right) {
+        if (pos == pos->par->right) {
+            pos->par->right = pos->right;
+            } else {
+            pos->par->left = pos->right;
+            }
+    } else {
+        if (pos == pos->par->left) {
+            pos->par->left = NULL;
+        } else {
+            pos->par->right = NULL;
         }
     }
-    if (pos->right != NULL) {
-        if (pos->par->key > pos->key) {
-            pos->par->left = pos->right;
-            free(pos);
-            tree->tsize--;
-            return 0;
-        } else {
-            pos->par->left = pos->right;
-            free(pos);
-            tree->tsize--;
-            return 0;
-        }
-    }
+    free(pos);
     return 0;
 }
 
