@@ -1,10 +1,14 @@
 #ifndef TREE_H
-#define THEE_H
+#define TREE_H
+
+typedef struct Item {
+    int info;
+    struct Item *next;
+} Item;
 
 typedef struct Node {
     int key;
-    int info;
-    struct Node *node;
+    Item info;
     struct Node *left;
     struct Node *right;
     struct Node *par;
