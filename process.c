@@ -26,7 +26,7 @@ int writeTree (FILE *fb, Tree *tree) {
 int addElement (Tree *tree, int key, int info) {
     Node *temp = (Node *) calloc(1, sizeof(Node));
     temp->key = key;
-    temp->info = info;
+    temp->info.info = info;
     if (tree->root == NULL) {
         tree->root = temp;
         return 0;
@@ -41,9 +41,9 @@ int addElement (Tree *tree, int key, int info) {
             ptr = ptr->right;
     }
     if (temp->key == par->key) {
-        while (par->node != NULL)
-            par = par->node;
-        par->node = temp;
+        while (par->info.next != NULL)
+            par = par->info.next;
+        par->info.next = temp;
         return 0;
     }
     if (temp->key < par->key)
@@ -122,16 +122,18 @@ Node *findMax (Node *ptr) {
     return ptr;
 }
 
-int delElement (Tree *tree, int key) {
+int delElement (Tree *tree, Node *ptr, int key) {
     Node *pos = NULL;
     for (int i = 0; i <= tree->tsize; i++) {
         pos = traversal(tree, pos);
         if (pos->key == key)
             break;
     }
-    if (pos->node != NULL) {
-        while (pos->node != NULL)
-            pos = pos->node;
+    if (pos->key != key)
+        return 1;
+    if (pos->info.next != NULL) {
+        while (pos->info.next != NULL)
+            pos = pos->info.next;
         free(pos);
         tree->tsize--;
         return 0;
@@ -139,7 +141,7 @@ int delElement (Tree *tree, int key) {
     if (pos->left && pos->right) {
         Node *max = findMax(pos->left);
         pos->info = max->info;
-        delElement(max, key);
+        delElement(tree, max, key);
         return 0;
     } else if (pos->left) {
         if (pos == pos->par->left) {
@@ -161,6 +163,7 @@ int delElement (Tree *tree, int key) {
         }
     }
     free(pos);
+    tree->tsize--;
     return 0;
 }
 
@@ -187,7 +190,16 @@ int printTree (Node *root, int p) {
         printTree(root->left, p + 5);
     for (int i = 0; i <= p; i++)
         printf(" ");
-    printf("(%d)\n", root->key);
+    if (root->info.next == NULL) {
+        printf("(%d)\n", root->key);
+    } else {
+        printf("(%d) %d ", root->key, root->info.info);
+        while (root->info.next) {
+            root = root->info.next;
+            printf("-> %d", root->info.info);
+        }
+        printf("\n");
+    }
     if (root->right)
         printTree(root->right, p + 5);
 }
