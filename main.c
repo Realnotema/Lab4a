@@ -89,6 +89,7 @@ int main() {
     FILE *fb = fopen(GetStr(), "w+b");
     writeTree (fb, tree);
     fclose(fb);
+    system("dot -Tpng test.dot -o test.png");
     freeTree(tree->root);
     return 0;
 }
