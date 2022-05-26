@@ -2,24 +2,25 @@
 #include "tree.h"
 #include <stdlib.h>
 
-int processWriteTree (FILE *fb, Node *root, int headKey, int p) {
+int processWriteTree (Tree *tree, FILE *fb, Node *root, int headKey, int p) {
     if (root->left)
-        processWriteTree(fb, root->left, headKey, p + 5);
-    if (root->key != headKey) {
-        fwrite(&root->key, sizeof(int), 1, fb);
-        fwrite(&root->info, sizeof(int), 1, fb);
+        processWriteTree(tree, fb, root->left, headKey, p + 5);
+    if (root->key != headKey && root->par != NULL) {
+        if (root->par != tree->root)
+            fprintf(fb, "\t%d->%d\n", root->par->key, root->key);
     }
     if (root->right)
-        processWriteTree(fb, root->right, headKey, p + 5);
+        processWriteTree(tree, fb, root->right, headKey, p + 5);
 }
 
 int writeTree (FILE *fb, Tree *tree) {
     if (tree == 0)
         return 1;
-    fwrite(&tree->tsize, sizeof(int), 1, fb);
-    fwrite(&tree->root->key, sizeof(int), 1, fb);
-    fwrite(&tree->root->info, sizeof(int), 1, fb);
-    processWriteTree(fb, tree->root, tree->root->key, 0);
+    fprintf(fb, "digraph GG {\n");
+    fprintf(fb, "\t%d->%d\n", tree->root->key, tree->root->left->key);
+    fprintf(fb, "\t%d->%d\n", tree->root->key, tree->root->right->key);
+    processWriteTree(tree, fb, tree->root, tree->root->key, 0);
+    fprintf(fb, "}");
     return 0;
 }
 
