@@ -86,7 +86,7 @@ int main() {
         flag = Menu(Dialog(options, 9), tree);
     } while (flag == 0);
     puts("Enter name of file to save your tree:");
-    FILE *fb = fopen(GetStr(), "w+b");
+    FILE *fb = fopen(GetStr(), "w");
     writeTree (fb, tree);
     fclose(fb);
     system("dot -Tpng test.dot -o test.png");
