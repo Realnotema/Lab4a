@@ -73,6 +73,12 @@ int Menu (int choose, Tree *tree) {
             fclose(fo);
             break;
         case 9:
+            puts("Enter name of file:");
+            fo = fopen(GetStr(), "w");
+            writeFrequency (fo, tree);
+            fclose(fo);
+            break;
+        case 10:
             return 1;
     }
     return 0;
@@ -81,10 +87,16 @@ int Menu (int choose, Tree *tree) {
 int main() {
     int flag = 0;
     Tree *tree = (Tree *) calloc(1, sizeof(Tree));
-    const char *options[] = {"1. Add element", "2. Delete element", "3. Tree traversal", "4. Find element by key", "5. Special find", "6. Print tree", "7. Timing", "8. Open file", "9. Quit"};
+    const char *options[] = {"1. Add element", "2. Delete element", "3. Tree traversal", 
+                             "4. Find element by key", "5. Special find", "6. Print tree", 
+                             "7. Timing", "8. Open file", "9. Write frequency", "10. Quit"};
     do {
-        flag = Menu(Dialog(options, 9), tree);
+        flag = Menu(Dialog(options, 10), tree);
     } while (flag == 0);
+    puts("Enter name of file to save your tree:");
+    FILE *fb = fopen(GetStr(), "w");
+    writeBinaryTree(fb, tree);
+    fclose(fb);
     puts("Enter name of file to save your tree:");
     FILE *fb = fopen(GetStr(), "w");
     writeTree (fb, tree);
