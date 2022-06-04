@@ -186,6 +186,58 @@ int freeTree (Node *root) {
     return 0;
 }
 
+int processWriteFrequency (FILE *fb, Node *node, int headKey) {
+    int i = 0;
+    if (node->left)
+        processWriteFrequency(fb, node->left, headKey);
+    if (node->key != headKey) {
+        i++;
+        if (node->info.next) {
+            Item *ptr = node->info.next;
+            while (ptr && ptr->next != NULL) {
+                ptr = ptr->next;
+                i++;
+            }
+        }
+        printf("Key: %d\t Count: %d\n", node->key, i);
+    }
+    if (node->right)
+        processWriteFrequency(fb, node->right, headKey);
+}
+
+int writeFrequency (FILE *fb, Tree *tree) {
+    if (tree == NULL)
+        return 1;
+    processWriteFrequency(fb, tree->root, tree->root->key);
+    return 0;
+}
+
+int processWriteBinaryTree (FILE *fb, Node *root, int headKey, int p) {
+    if (root->left)
+        processWriteBinaryTree(fb, root->left, headKey, p + 5);
+    if (root->key != headKey) {
+        fwrite(&root->key, sizeof(int), 1, fb);
+        fwrite(&root->info, sizeof(int), 1, fb);
+        while (root->info.next) {
+            root = root->info.next;
+            fwrite(&root->key, sizeof(int), 1, fb);
+            fwrite(&root->info.info, sizeof(int), 1, fb);
+        }
+    }
+    if (root->right)
+        processWriteBinaryTree(fb, root->right, headKey, p + 5);
+}
+
+int writeBinaryTree (FILE *fb, Tree *tree) {
+    if (tree == 0)
+        return 1;
+    fwrite(&tree->tsize, sizeof(int), 1, fb);
+    fwrite(&tree->root->key, sizeof(int), 1, fb);
+    fwrite(&tree->root->info, sizeof(int), 1, fb);
+    processWriteBinaryTree(fb, tree->root, tree->root->key, 0);
+    return 0;
+}
+
 int printTree (Node *root, int p) {
     if (root->left)
         printTree(root->left, p + 5);
